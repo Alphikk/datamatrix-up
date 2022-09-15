@@ -4,7 +4,4 @@
 
 #include <zmq.h>
 
-
-
-
 #endif
