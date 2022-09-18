@@ -1,26 +1,38 @@
 #include <main.hpp>
-#include <iostream>
-#include <thread>
-#include <unistd.h>
+#include "server.hpp"
 
 
+// REDIS IS HERE
 
-
-
-
-int main (void)
+namespace server
 {
-    //  Socket to talk to clients
-    void *context = zmq_ctx_new ();
-    void *responder = zmq_socket (context, ZMQ_REP);
-    int rc = zmq_bind (responder, "tcp://*:5555");
 
-    while (1) {
-        char buffer [10];
-        zmq_recv (responder, buffer, 10, 0);
-        printf ("Received Hello\n");
-        sleep(3);
-        zmq_send (responder, "World", 5, 0);
+redisUniquePtr
+connectRedis()
+{
+
+    redisContext * ctx;
+    uint32_t isunix = 1;
+    const char * hostName = "127.0.0.1";
+    const int port = 6379;
+    struct timeval timeout = { 1, 500000 };
+    
+    ctx = redisConnectWithTimeout(hostName, port, timeout);
+    if (ctx == nullptr || ctx->err) {
+        if (ctx) {
+
+            printf("Connection error: %s\n", ctx->errstr);
+            return server::redisUniquePtr(ctx);
+
+        } else {
+
+            printf("Connection error: can't allocate redis context\n");
+            return server::redisUniquePtr(ctx);
+        }
     }
-    return 0;
+    printf("Connection to redis is OK!\n");
+    return server::redisUniquePtr(ctx);
+
 }
+
+} // namespace server

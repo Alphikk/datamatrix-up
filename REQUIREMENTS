@@ -1,1 +1,14 @@
 libzmq3-dev_4.3.2-2ubuntu1_amd64.deb
+
+
+redis:
+
+    curl -fsSL https://packages.redis.io/gpg | sudo gpg --dearmor -o /usr/share/keyrings/redis-archive-keyring.gpg
+
+    echo "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/redis.list
+    sudo apt-get update
+    sudo apt-get install redis
+
+https://github.com/redis/hiredis
+libhiredis-dev
+libhiredis0.14_0.14.0-6_amd64.deb
